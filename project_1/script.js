@@ -7,18 +7,54 @@ const playerImage = new Image();
 playerImage.src = "assets/shadow_dog.png";
 const spriteWidth = 575;
 const spriteHeight = 523;
-let frameX = 0;
-let frameY = 0;
 let gameFrame = 0;
 const staggerFrames = 3;
-let frameCount = [7, 7, 7, 9, 11, 5, 7, 7, 12, 4];
+let playerState = "run";
+
+const spriteAnimations = [];
+
+const animationStates = [
+  { name: "idle", frames: 7 },
+  { name: "jump", frames: 7 },
+  { name: "fall", frames: 7 },
+  { name: "run", frames: 9 },
+  { name: "dizzy", frames: 11 },
+  { name: "sit", frames: 5 },
+  { name: "roll", frames: 7 },
+  { name: "bit", frames: 7 },
+  { name: "ko", frames: 12 },
+  { name: "getHit", frames: 4 },
+];
+
+// Generate array of locations for each animation
+animationStates.forEach((state, index) => {
+  let frames = {
+    loc: [],
+  };
+  for (let j = 0; j < state.frames; j++) {
+    let postitionX = j * spriteWidth;
+    let postitionY = index * spriteHeight;
+    frames.loc.push({ x: postitionX, y: postitionY });
+  }
+  spriteAnimations[state.name] = frames;
+});
 
 function animate() {
+  // Clear out any previous frame
   ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+  // This is frame position
+  let postition =
+    Math.floor(gameFrame / staggerFrames) %
+    spriteAnimations[playerState].loc.length;
+  // Get the actual X & Y co-ord of the frame being drawn
+  let frameX = spriteAnimations[playerState].loc[postition].x;
+  let frameY = spriteAnimations[playerState].loc[postition].y;
+
   ctx.drawImage(
     playerImage,
-    spriteWidth * frameX,
-    spriteHeight * frameY,
+    frameX,
+    frameY,
     spriteWidth,
     spriteHeight,
     0,
@@ -26,9 +62,6 @@ function animate() {
     spriteWidth,
     spriteHeight
   );
-  if (gameFrame % staggerFrames == 0) {
-    frameX = (frameX + 1) % frameCount[frameY];
-  }
   gameFrame++;
   requestAnimationFrame(animate);
 }

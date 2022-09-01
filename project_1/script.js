@@ -26,7 +26,7 @@ const animationStates = [
   { name: "dizzy", frames: 11 },
   { name: "sit", frames: 5 },
   { name: "roll", frames: 7 },
-  { name: "bit", frames: 7 },
+  { name: "bite", frames: 7 },
   { name: "ko", frames: 12 },
   { name: "getHit", frames: 4 },
 ];
